@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'photoaway/cli'
+
+Photoaway::CLI.new.run(ARGV)
