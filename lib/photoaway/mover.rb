@@ -19,10 +19,17 @@ module Photoaway
 			end
 
 			dest_path = @cfg.root / dest_subpath
+			dest_path_abs = dest_path.absolute_path
 
 			if dest_path.exist?
-				msg_err { "Destinaton file #{dest_path} already exist, skipping" }
-				return :skipped
+				same = FileUtils.identical?(src_path, dest_path_abs)
+				if same
+					msg_err { "Destinaton file #{dest_path} already exists (identical), skipping" }
+					return :exist_same
+				else
+					msg_err { "Destinaton file #{dest_path} already exists with different content, skipping" }
+					return :exist_different
+				end
 			end
 
 			msg { op = @cfg.move? ? 'moving' : 'copying' ; "#{op} #{src_path} to #{dest_path}" }
@@ -30,9 +37,9 @@ module Photoaway
 			FileUtils.mkdir_p(dest_path.parent_dir.absolute_path)
 
 			if @cfg.move?
-				FileUtils.mv(src_path, dest_path.absolute_path)
+				FileUtils.mv(src_path, dest_path_abs)
 			else
-				FileUtils.cp(src_path, dest_path.absolute_path)
+				FileUtils.cp(src_path, dest_path_abs)
 			end
 
 			return :moved

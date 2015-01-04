@@ -44,7 +44,8 @@ module Photoaway
 		def print_summary(outcomes)
 			pics_count = outcomes.values.inject(&:+)
 
-			num_skipped = outcomes[:skipped]
+			num_skipped = outcomes[:exist_different]
+			num_skipped += outcomes[:exist_same]
 			num_errors = outcomes[:error]
 			if !num_skipped.zero? || !num_errors.zero?
 				$stderr.puts
