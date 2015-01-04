@@ -14,7 +14,7 @@ module Photoaway
 				src_path = picture.path
 				dest_subpath = compiled_path(picture)
 			rescue Photoaway::NoMetadataError
-				msg_err { "Metadata error in #{src_path}, skipping." }
+				msg_err { "Skipping #{src_path}: metadata error." }
 				return :error
 			end
 
@@ -24,10 +24,10 @@ module Photoaway
 			if dest_path.exist?
 				same = FileUtils.identical?(src_path, dest_path_abs)
 				if same
-					msg_err { "Destinaton file #{dest_path} already exists (identical), skipping" }
+					msg_err { "Skipping #{src_path}: destinaton file #{dest_path} already exists (identical)." }
 					return :exist_same
 				else
-					msg_err { "Destinaton file #{dest_path} already exists with different content, skipping" }
+					msg_err { "Skipping #{src_path}: destinaton file #{dest_path} already exists with different content." }
 					return :exist_different
 				end
 			end
