@@ -16,6 +16,9 @@ module Photoaway
 			rescue Photoaway::NoMetadataError
 				msg_err { "Skipping #{src_path}: metadata error." }
 				return :error
+			rescue EXIFR::MalformedJPEG
+				msg_err { "Skipping #{src_path}: malformed JPEG." }
+				return :error
 			end
 
 			dest_path = @cfg.root / dest_subpath
