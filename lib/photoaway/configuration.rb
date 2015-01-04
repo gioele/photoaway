@@ -32,7 +32,7 @@ module Photoaway
 		end
 
 		def config_file_options
-			cfg_file_path = Userdirs.config_file_path('photoaway', 'config')
+			cfg_file_path = Userdirs.config_file_user('photoaway', 'config')
 			cfg_file = IniFile.load(cfg_file_path)
 			cfg = cfg_file['global']
 
