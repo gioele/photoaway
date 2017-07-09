@@ -1,4 +1,5 @@
 require 'filepath'
+require 'time'
 
 require 'photoaway/configuration'
 require 'photoaway/errors'
@@ -8,6 +9,10 @@ require 'photoaway/picture'
 module Photoaway
 	class CLI
 		def run(args)
+			now = Time.now
+			@import_date = now.iso8601
+			@import_id = now.to_i
+
 			begin
 				cmdline_options = parse_args(args)
 
@@ -24,6 +29,9 @@ module Photoaway
 				exit 1
 			end
 
+			@log = log_file
+			@log.puts "Import session started at #{Time.now}"
+
 			source_path = args.first.as_path
 			pics_paths = source_path.files(recursive: true).to_a
 			pics = pics_paths.map { |path| Photoaway::Picture.for(path) }
@@ -37,6 +45,8 @@ module Photoaway
 			end
 
 			print_summary(outcomes)
+
+			@log.puts "Import session ended at #{Time.now}"
 		end
 
 		def parse_args(args)
@@ -67,12 +77,19 @@ module Photoaway
 			end
 		end
 
+		def log_file
+			log_path = @config.root / "import-#{@import_id}-#{@import_date}.log"
+			return File.open(log_path, 'w')
+		end
+
 		def process_msg(msg)
+			@log.puts msg
 			puts msg
 		end
 
 		def process_error_msg(msg)
 			formatted_msg = "ERROR: #{msg}"
+			@log.puts formatted_msg
 			puts formatted_msg
 		end
 	end
