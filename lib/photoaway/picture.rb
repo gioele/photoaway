@@ -39,8 +39,10 @@ module Photoaway
 			fields[:camera_model] = data.model
 			fields[:date_time] = data.date_time_original || data.date_time
 
-			if fields.values.any?(&:nil?)
-				raise NoMetadataError, "Could not extract metadata"
+			fields.each_pair do |field, value|
+				if value.nil?
+					raise NoMetadataError, "Could not extract metadata field #{field}"
+				end
 			end
 
 			date = fields[:date_time].strftime('%Y-%m-%d').split('-')
