@@ -34,6 +34,17 @@ RSpec.describe Photoaway::Mover do
 		@test_pic_dest.should exist
 	end
 
+	it "does not copy images if dest is marked as removed" do
+		cfg = Photoaway::Configuration.new(@base_settings)
+		mover = Photoaway::Mover.new(cfg)
+
+		removed_placeholder = @test_pic_dest.add_extension('removed')
+		removed_placeholder.touch_p
+
+		mover.move(@test_pic).should_not eq(:moved)
+		@test_pic_dest.should_not exist
+	end
+
 	it "skips already copied files" do
 		cfg = Photoaway::Configuration.new(@base_settings)
 		mover = Photoaway::Mover.new(cfg)

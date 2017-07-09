@@ -36,6 +36,12 @@ module Photoaway
 				end
 			end
 
+			dest_path_removed = @cfg.root / dest_subpath.add_extension('removed')
+			if dest_path_removed.exist?
+				msg_info { "Skipping #{src_path}: destination marked as removed, placeholder file #{dest_path_removed} found." }
+				return :removed_placeholder_found
+			end
+
 			msg { op = @cfg.move? ? 'moving' : 'copying' ; "#{op} #{src_path} to #{dest_path}" }
 
 			dest_path.parent_dir.absolute_path.mkdir_p

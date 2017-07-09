@@ -64,6 +64,7 @@ module Photoaway
 
 			num_skipped = outcomes[:exist_different]
 			num_skipped += outcomes[:exist_same]
+			num_skipped += outcomes[:removed_placeholder_found]
 			num_errors = outcomes[:error]
 			if !num_skipped.zero? || !num_errors.zero?
 				$stderr.puts
