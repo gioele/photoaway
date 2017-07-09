@@ -14,8 +14,8 @@ module Photoaway
 			begin
 				src_path = picture.path
 				dest_subpath = compiled_path(picture)
-			rescue Photoaway::NoMetadataError
-				msg_err { "Skipping #{src_path}: metadata error." }
+			rescue Photoaway::NoMetadataError => e
+				msg_err { "Skipping #{src_path}: metadata error: #{e}." }
 				return :error
 			rescue EXIFR::MalformedJPEG
 				msg_err { "Skipping #{src_path}: malformed JPEG." }
