@@ -70,6 +70,14 @@ module Photoaway
 			return @options[:msg_fn]
 		end
 
+		def msg_info_fn
+			return @options[:msg_info_fn]
+		end
+
+		def msg_err_fn
+			return @options[:msg_err_fn]
+		end
+
 		def path_directory_template
 			return @options[:directory_template]
 		end

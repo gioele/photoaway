@@ -10,7 +10,15 @@ module Photoaway
 		def run(args)
 			begin
 				cmdline_options = parse_args(args)
-				config = Photoaway::Configuration.new(cmdline_options)
+
+				extra_options = {}
+				# FIXME: control with command line options
+				extra_options[:msg_fn] = lambda { |msg| process_msg(msg) }
+				extra_options[:msg_info_fn] = lambda { |msg| process_msg(msg) }
+				extra_options[:msg_err_fn] = lambda { |msg| process_error_msg(msg) }
+
+				options = cmdline_options.merge(extra_options)
+				@config = Photoaway::Configuration.new(options)
 			rescue ConfigurationError => e
 				$stderr.puts "ERROR: #{e.message}"
 				exit 1
@@ -21,7 +29,7 @@ module Photoaway
 			pics = pics_paths.map { |path| Photoaway::Picture.for(path) }
 			pics.compact!
 
-			mover = Photoaway::Mover.new(config)
+			mover = Photoaway::Mover.new(@config)
 			outcomes = Hash.new(0)
 			pics.each do |photo|
 				outcome = mover.move(photo)
@@ -57,6 +65,15 @@ module Photoaway
 			if !num_errors.zero?
 				$stderr.puts "\tCould not process #{num_errors} files (out of #{pics_count} total files)"
 			end
+		end
+
+		def process_msg(msg)
+			puts msg
+		end
+
+		def process_error_msg(msg)
+			formatted_msg = "ERROR: #{msg}"
+			puts formatted_msg
 		end
 	end
 end

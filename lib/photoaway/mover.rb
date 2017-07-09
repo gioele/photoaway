@@ -59,12 +59,27 @@ module Photoaway
 		end
 
 		def msg
-			# FIXME: use @cfg.msg_fn
-			puts yield
+			if !@cfg.msg_fn.nil?
+				@cfg.msg_fn[yield]
+			else
+				puts yield
+			end
+		end
+
+		def msg_info
+			if !@cfg.msg_info_fn.nil?
+				@cfg.msg_info_fn[yield]
+			else
+				puts yield
+			end
 		end
 
 		def msg_err
-			$stderr.puts yield
+			if !@cfg.msg_err_fn.nil?
+				@cfg.msg_err_fn[yield]
+			else
+				$stderr.puts yield
+			end
 		end
 	end
 end
