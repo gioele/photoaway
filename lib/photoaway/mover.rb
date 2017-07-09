@@ -1,5 +1,6 @@
 require 'filepath'
 require 'fileutils'
+require 'exifr'
 
 require 'photoaway/errors'
 
