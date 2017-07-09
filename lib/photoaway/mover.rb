@@ -38,7 +38,7 @@ module Photoaway
 
 			msg { op = @cfg.move? ? 'moving' : 'copying' ; "#{op} #{src_path} to #{dest_path}" }
 
-			FileUtils.mkdir_p(dest_path.parent_dir.absolute_path)
+			dest_path.parent_dir.absolute_path.mkdir_p
 
 			if @cfg.move?
 				FileUtils.mv(src_path, dest_path_abs)
