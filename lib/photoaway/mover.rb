@@ -28,7 +28,7 @@ module Photoaway
 			if dest_path.exist?
 				same = FileUtils.identical?(src_path, dest_path_abs)
 				if same
-					msg_err { "Skipping #{src_path}: destinaton file #{dest_path} already exists (identical)." }
+					msg_info { "Skipping #{src_path}: destinaton file #{dest_path} already exists (identical)." }
 					return :exist_same
 				else
 					msg_err { "Skipping #{src_path}: destinaton file #{dest_path} already exists with different content." }
