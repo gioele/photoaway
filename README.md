@@ -71,6 +71,40 @@ destination directory:
   `D90/2013/06-20`, `N8/2010/11-28`.
 
 
+Metadata clean-up
+-----------------
+
+Sometimes the metadata fields contain erroneous data, for example
+the name of the camera maker is misspelled. Because of this problem,
+some photos may copied to the wrong directory. In these cases, the
+metadata clean-up mechanism can be used to replace the wrong data
+with the correct data before the directory template is built.
+
+Please note: the metadata in the files will not be modified.
+
+In order to clean up the metadata, add one or more patterns in the
+configuration file under the section `clean_metadata/`_field_.
+
+### Example clean-up patterns
+
+To replace the all caps "SAMSUNG" with a more pleasant capitalized
+"Samsung", add the following pattern for the field `camera_maker`.
+
+    [clean_metadata/camera_maker]
+    pattern_1_match = "SAMSUNG"
+    pattern_1_replace = "Samsung"
+
+The clean-up mechanism can be used to associate cameras with
+people or to give them nicknames.
+
+    [clean_metadata/camera_model]
+    pattern_1_match = "D610"
+    pattern_1_replace = "Mel's camera"
+
+    pattern_2_match = "M3"
+    pattern_2_replace = "Work"
+
+
 Installation
 ------------
 

@@ -3,11 +3,14 @@ require 'fileutils'
 require 'exifr'
 
 require 'photoaway/errors'
+require 'photoaway/metadata_cleaner'
 
 module Photoaway
 	class Mover
 		def initialize(config)
 			@cfg = config
+
+			@metadata_cleaner = MetadataCleaner.new(@cfg)
 		end
 
 		def move(picture)
@@ -59,7 +62,8 @@ module Photoaway
 			filename = picture.path.filename
 
 			metadata = picture.metadata
-			directory = @cfg.path_directory_template % metadata
+			metadata_clean = @metadata_cleaner.clean(metadata)
+			directory = @cfg.path_directory_template % metadata_clean
 
 			return directory.as_path / filename
 		end

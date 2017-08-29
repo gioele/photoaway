@@ -38,6 +38,23 @@ module Photoaway
 
 			options = cfg.map { |k, v| [k.to_sym, v] }.to_h
 
+			options[:clean_patterns] = {}
+
+			clean_sections = cfg_file.sections.grep(/^clean_metadata\//)
+			clean_sections.each do |section_name|
+				section = cfg_file[section_name]
+
+				field = section_name.sub(/^clean_metadata\//, '').to_sym
+				patterns = section.keys.grep(/^pattern_.*_match$/)
+
+				options[:clean_patterns][field] = patterns.map do |pattern|
+					match = section[pattern]
+					replace = section[pattern.sub(/_match$/, '_replace')]
+
+					next [match, replace]
+				end
+			end
+
 			return options
 		end
 
@@ -84,6 +101,10 @@ module Photoaway
 
 		def move?
 			return @options[:mode] == :move
+		end
+
+		def clean_patterns
+			return @options[:clean_patterns]
 		end
 	end
 end
